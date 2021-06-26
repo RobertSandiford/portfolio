@@ -1,0 +1,15 @@
+
+.funding .coin .coin-name {
+    font-size: 100%;
+}
+
+.funding .coin .deposit-withdraw {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.funding .deposit-withdraw .coin-left {
+}
+
+.funding .deposit-withdraw .coin-right {
+}

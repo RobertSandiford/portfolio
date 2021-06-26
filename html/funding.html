@@ -1,0 +1,46 @@
+{{ template "header.html" }}
+{{ template "nav.html" }}
+        
+        <div class="middle funding">
+
+            <script type="text/javascript">
+                fee_market = {{ .Fees.Market }}
+                fee_limit = {{ .Fees.Limit }}
+                fee_special = {{ .Fees.Special }}
+            </script>
+
+            <h1>Deposit / Withdraw</h1><br />
+
+            <div id="coins">
+                <div class="coin">
+                    <h2 class="coin-name">Bitcoin</h2><br />
+                    <div class="deposit-withdraw">
+                        <div class="coin-left">
+                            Deposit: hsyv84sCGF$&VNgfv$&HFGFGE<br />
+                        </div>
+                        <div class="coin-right">
+                            Withdraw: <br />
+                            Destination: <input name="destination" /><br />
+                            Amount: <input name="amount" /><br />
+                        </div>
+                    </div>
+                </div><br />
+                <div class="coin">
+                    <span class="coin-name">Litecoin</span>
+                        
+                </div><br />
+                <div class="coin">
+                    <span class="coin-name">Bitcoin Cash</span>
+                    
+                </div><br />
+                <div class="coin">
+                    <span class="coin-name">DASH</span>
+                </div><br />
+                <div class="coin">
+                    <span class="coin-name">Ether (Ethereum)</span>
+                </div>
+            </div>
+
+        </div>
+        
+{{ template "footer.html" }}

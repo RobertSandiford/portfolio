@@ -1,0 +1,290 @@
+{{ template "header.html" }}
+{{ template "nav.html" }}
+        
+        <div class="middle frontpage">
+
+            <script type="text/javascript">
+                currency1_balance = {{ .FcBalance }}
+            </script>
+
+            <div class="main">
+                <div class="main-left">
+                    
+                    <script>
+                        var get = document.getElementById.bind(document)
+
+                        
+
+                        function addAsset(asset) {
+                            console.log("add asset", asset)
+
+                            // Instantiate the table with the existing HTML tbody
+                            // and the row with the template
+                            var assetListTBody = document.querySelector("#asset-list").querySelector("tbody")
+                            var template = document.querySelector('#asset-template')
+
+                            // Clone the new row and insert it into the table
+                            var clone = template.content.cloneNode(true);
+                            
+                            if (asset != null) {
+                                clone.querySelector('input[name="symbol"]').value = asset.asset
+                                clone.querySelector('input[name="percentage"]').value = percentage(asset.portion, 2)
+                            }
+
+                            assetListTBody.appendChild(clone);
+                        }
+
+                        function commit() {
+                            var assetRows = document.querySelector("#asset-list").querySelectorAll("tr.asset")
+
+                            var postData = {
+                                assets : []
+                            }
+
+                            assetRows.forEach(function(row) {
+
+                                var symbol = row.querySelector("input[name='symbol']").value
+                                var percentage = row.querySelector("input[name='percentage']").value
+                                var leverage = row.querySelector("select[name='leverage']").value
+
+                                postData.assets.push({
+                                    symbol : symbol,
+                                    percentage : percentage,
+                                    leverage : leverage
+                                })
+
+                            });
+
+                            fetch('/commit', {
+                                method: 'post',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(postData)
+                            })
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .then(function(data) {
+                                console.log(data)
+                            });
+
+                        }
+
+                        function calculateTotalPercentage() {
+                            var totalPercentage = 0
+
+                            var assetRows = document.querySelector("#asset-list").querySelectorAll("tr.asset")
+                            assetRows.forEach(function(row) {
+
+                                var percentage = row.querySelector("input[name='percentage']").value
+
+                                totalPercentage += Number(percentage)
+
+                            });
+
+                            return totalPercentage
+                        }
+
+                        function updateTotalPercentage() {
+                            var p = calculateTotalPercentage()
+                            get("total-percentage-value").textContent = p + "%"
+                        }
+
+                        function test() {
+                            fetch('/test')
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .then(function(data) {
+                                console.log(data)
+                            });
+                        }
+
+                        async function getPrices(assets, priceAssets) {
+                            var params = {
+                                assets : assets.join(),
+                                priceAssets : priceAssets.join()
+                            }
+
+                            var r = await netGet('/prices', params)
+                        }
+
+                        async function balances() {
+                            data = await netGet('/balances')
+
+                            console.log(data, typeof data)
+
+                            for (var i in data.prices) {
+                                var p = data.prices[i]
+                                data.prices[p.pair] = p.price
+                                delete data.prices[i]
+                            }
+                            console.log(data.prices)
+
+                            var assetListTBody = document.querySelector("#asset-list").querySelector("tbody");
+                            assetListTBody.innerHTML = ""
+
+                            var balancesTbody = get("balances").querySelector('tbody')
+                            balancesTbody.innerHTML = ""
+
+                            addBalancesAsset = (asset, prices) => {
+                                let template = document.querySelector('#balances-asset-template')
+                                let clone = template.content.cloneNode(true)
+
+                                let tds = clone.querySelectorAll("td")
+                                tds[0].textContent = asset.asset + ":"
+                                tds[1].textContent = asset.total
+                                tds[2].textContent = "₿" + roundDp(asset.value, 8)
+                                tds[3].textContent = "£" + roundDp(asset.value * prices.BTCGBP, 2)
+                                tds[4].textContent = "$" + roundDp(asset.value * prices.BTCUSDT, 2)
+                                tds[5].textContent = (Math.round(asset.portion * 10000) / 100) + "%"
+
+                                balancesTbody.appendChild(clone)
+                            }
+
+                            if (typeof data == "object") {
+                                for (var i in data.pricedBalances) {
+                                    var asset = data.pricedBalances[i]
+                                    asset.free = Number(asset.free)
+                                    asset.locked = Number(asset.locked)
+                                    asset.total = asset.free + asset.locked
+                                    //data.pricedBalances[i] = asset
+
+                                    addBalancesAsset(asset, data.prices)
+                                    addAsset(asset, data.prices)
+                                }
+                            }
+
+                            updateTotalPercentage()
+
+                            //console.log("rr")
+
+                            //console.log(assets)
+                        }
+
+                        function netGet(url, params = {}) {
+
+                            var getUrl = url
+
+                            if ( Object.keys(params).length > 0 ) {
+                                var queryString = "?"
+                                for (var key in params) {
+                                    if (queryString.legnth > 1) queryString += "&"
+                                    queryString += `key=${params[key]}`
+                                }
+                                getUrl += queryString
+                            }
+
+                            /*if (queryString !== "") {
+                                getUrl + "?" + queryString
+                            }*/
+
+                            return (
+                                fetch(getUrl)
+                                .then(function(response) {
+                                    console.log("resp", response)
+                                    return response.json();
+                                })
+                            )
+                        }
+
+                        function percentage(n, m) {
+                            n = roundDp(n, m+2)
+                            n *= 100
+                            n = n.toFixed(m) // deal with float imprecision
+                            n = Number(n) // deal with float imprecision
+                            return n
+                        }
+
+                        function roundDp(n, m) {
+                            n *= Math.pow(10, m)
+                            n = Math.round(n)
+                            n /= Math.pow(10, m)
+                            return n
+                        }
+
+                    </script>
+
+                    <template id="asset-template">
+                        <tr style="margin: 1vmin 0;" class="asset">
+                            <td><input name="symbol" /></td>
+                            <td><input name="percentage" onchange="updateTotalPercentage()" />%</td>
+                            <td><select name="leverage">
+                                <option value="1">x 1</option>
+                                <option value="2">x 2</option>
+                                <option value="3">x 3</option>
+                                <option value="5">x 5</option>
+                                <option value="10">x 10</option>
+                            </select></td>
+                        </tr>
+                    </template>
+
+                        
+                    <button onclick="balances()">Get Balance</button><br />
+                    <br />
+
+                    <table id="asset-list">
+                        <tbody>
+                            <thead>
+                                <th>Asset</th>
+                                <th>Percentage</th>
+                                <th>Leverage</th>
+                            </thead>
+                        </tbody>
+                    </table>
+                    <script>addAsset()</script>
+
+
+
+                    <br />
+                    <button onclick="addAsset()">+</button><br />
+
+                    <br />
+                    <span>Total Percentage: <span id="total-percentage-value">0%</span></span><br />
+
+                    <br />
+                    <button onclick="commit()">Commit</button><br />
+                    <br />
+                    <button onclick="test()">Test</button><br />
+                    <br />
+                    
+                    <template id="balances-asset-template">
+                        <tr class="balances-asset">
+                            <td class="balances-asset-symbol" style="padding: 0.1em 1em"></td>
+                            <td class="balances-asset-amount" style="padding: 0.1em 1em"></td>
+                            <td class="balances-asset-val-btc" style="padding: 0.1em 1em"></td>
+                            <td class="balances-asset-val-gbp" style="padding: 0.1em 1em"></td>
+                            <td class="balances-asset-val-usd" style="padding: 0.1em 1em"></td>
+                            <td class="balances-asset-percentage" style="padding: 0.1em 1em"></td>
+                        </tr>
+                    </template>
+
+                    <div id="balances">
+                        <table>
+                            <tbody>
+                                <thead>
+                                    <th>Asset</th><th>Amount</th><th>Val BTC</th><th>Val GBP</th><th>Val USD</th><th>Percentage</th>
+                                </thead>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+
+
+                </div>
+                <div class="main-right">
+                    <a href="/sign-up">Sign Up</a><br />
+                    <br />
+
+                    
+                    {{ template "log-in.html" }}
+
+                </div>
+            </div>
+          
+
+        </div>
+        
+{{ template "footer.html" }}

@@ -1,0 +1,32 @@
+{{ template "header.html" }}
+{{ template "nav.html" }}
+        
+        <div class="middle explore">
+
+            <script type="text/javascript">
+
+                currency1_balance = {{ .FcBalance }}
+
+                buyPrice = {{ if .DataPackage }}{{ .DataPackage.BuyPrice }}{{ end }}
+                midPrice = {{ .DataPackage.MidPrice }}
+                latestPrice = {{ .DataPackage.LatestPrice }}
+                sellPrice = {{ .DataPackage.SellPrice }}
+
+                currency1_balance = {{ .FcBalance }}
+                currency2_balance = {{ .ScBalance }}
+
+                currency1_available = {{ .FcAvailable }}
+                currency2_available = {{ .ScAvailable }}
+
+                fee_market = {{ .Fees.Market }}
+                fee_limit = {{ .Fees.Limit }}
+                fee_special = {{ .Fees.Special }}
+            </script>
+
+            <h1>Managers</h1>
+
+            
+
+        </div>
+        
+{{ template "footer.html" }}

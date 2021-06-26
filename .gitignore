@@ -1,0 +1,7 @@
+.vscode
+wordspace.code-wordspace
+vendor
+main.exe
+.goreload.exe
+
+.env

@@ -1,0 +1,7 @@
+#asset-list th, #asset-list td {
+    padding: 0.5vmin 1vmin;
+}
+
+#asset-list input {
+    width: 7em;
+}

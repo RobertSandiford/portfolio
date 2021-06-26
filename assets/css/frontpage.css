@@ -1,0 +1,14 @@
+.frontpage .main {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+
+.frontpage .main-left {
+    box-sizing: border-box;
+    padding : 2vmin;
+}
+
+.frontpage .main-right {
+    box-sizing: border-box;
+    padding : 2vmin;
+}

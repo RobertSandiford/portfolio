@@ -1,0 +1,26 @@
+{{/* template "includes/header.html" */}}
+
+		<div class="middle">
+
+			<div class="log-in">
+
+				<span class="log-in-message">{{ .logInMessage }}</span>
+
+				<span class="log-in-result">
+					{{ .logInResult }}
+				</span>
+
+				<form method="POST" action="log-in.php">
+					<fieldset>
+						<label for="email">E-mail</label> <input name="email" />
+						<br /><br />
+						<label for="password">Password</label> <input type="password" name="password" />
+						<br />
+						<input type="submit" name="log_in_submit" value="Log in" />
+					</fieldset>
+				</form>
+			</div>
+
+			<div class="clear"></div>
+
+		</div>

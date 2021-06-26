@@ -1,0 +1,192 @@
+{{ template "header.html" }}
+{{ template "nav.html" }}
+        
+        <div class="middle explore">
+
+            <script type="text/javascript">
+
+                currency1_balance = {{ .FcBalance }}
+
+                buyPrice = {{ if .DataPackage }}{{ .DataPackage.BuyPrice }}{{ end }}
+                midPrice = {{ .DataPackage.MidPrice }}
+                latestPrice = {{ .DataPackage.LatestPrice }}
+                sellPrice = {{ .DataPackage.SellPrice }}
+
+                currency1_balance = {{ .FcBalance }}
+                currency2_balance = {{ .ScBalance }}
+
+                currency1_available = {{ .FcAvailable }}
+                currency2_available = {{ .ScAvailable }}
+
+                fee_market = {{ .Fees.Market }}
+                fee_limit = {{ .Fees.Limit }}
+                fee_special = {{ .Fees.Special }}
+            </script>
+
+            <h1>Explore Assets</h1>
+
+            <div class="category">
+                <h2>Crypto</h2>
+                <div class="assets">
+                    <script>
+                        var crypto_assets = {
+                            Bitcoin : {
+                                name : "Bitcoin",
+                                symbol : "BTC",
+                                price : 57321,
+                                pricedIn : "$"
+                            },
+                            Litecoin : {
+                                name : "Litecoin",
+                                symbol : "LTC",
+                                price : 721,
+                                pricedIn : "$"
+                            },
+                            Decred : {
+                                name : "Decred",
+                                symbol : "DCR",
+                                price : 171.2,
+                                pricedIn : "$"
+                            },
+                            Ethereum : {
+                                name : "Ethereum",
+                                symbol : "ETH",
+                                price : 16321,
+                                pricedIn : "$"
+                            },
+                            Cardano : {
+                                name : "Cardano",
+                                symbol : "ADA",
+                                price : 1.3,
+                                pricedIn : "$"
+                            },
+                            Polkadot : {
+                                name : "Polkadot",
+                                symbol : "DOT",
+                                price : 7,
+                                pricedIn : "$"
+                            },
+                        }
+                        for (name in crypto_assets) {
+                            let a = crypto_assets[name]
+                            document.write(`<div class="asset">
+                                <div class="asset-left">
+                                    ${a.name} <span class="symbol">(${a.symbol})</span><br />
+                                    <span class="price"><span class="pricedIn">${a.pricedIn}</span>${a.price}</span>
+                                </div>
+                                <div class="asset-right">
+                                    <button class="buy-button">Buy</button>
+                                </div>
+                            </div>`)
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2>Stocks</h2>
+                <div class="assets">
+                    <script>
+                        var stock_assets = {
+                            Bitcoin : {
+                                name : "Bitcoin",
+                                symbol : "BTC",
+                                price : 57321,
+                                pricedIn : "$"
+                            },
+                            Litecoin : {
+                                name : "Litecoin",
+                                symbol : "LTC",
+                                price : 721,
+                                pricedIn : "$"
+                            },
+                            Decred : {
+                                name : "Decred",
+                                symbol : "DCR",
+                                price : 171.2,
+                                pricedIn : "$"
+                            },
+                            Ethereum : {
+                                name : "Ethereum",
+                                symbol : "ETH",
+                                price : 16321,
+                                pricedIn : "$"
+                            },
+                            Cardano : {
+                                name : "Cardano",
+                                symbol : "ADA",
+                                price : 1.3,
+                                pricedIn : "$"
+                            },
+                            Polkadot : {
+                                name : "Polkadot",
+                                symbol : "DOT",
+                                price : 7,
+                                pricedIn : "$"
+                            },
+                        }
+                        for (name in stock_assets) {
+                            let a = stock_assets[name]
+                            document.write(`<div class="asset">
+                                <div class="asset-left">
+                                    ${a.name} <span class="symbol">(${a.symbol})</span><br />
+                                    <span class="price"><span class="pricedIn">${a.pricedIn}</span>${a.price}</span>
+                                </div>
+                                <div class="asset-right">
+                                    <button class="buy-button">Buy</button>
+                                </div>
+                            </div>`)
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2>Fiat</h2>
+                <div class="assets">
+                    <script>
+                        var fiat_assets = {
+                            usd : {
+                                name : "US Dollar",
+                                symbol : "USD",
+                                price : 1,
+                                pricedIn : "$"
+                            },
+                            gbp : {
+                                name : "British Pound",
+                                symbol : "GBP",
+                                price : 1.33,
+                                pricedIn : "$"
+                            },
+                            eur : {
+                                name : "Euro",
+                                symbol : "EUR",
+                                price : 1.2,
+                                pricedIn : "$"
+                            },
+                            yen : {
+                                name : "Japanese Yen",
+                                symbol : "YEN",
+                                price : 103,
+                                pricedIn : "$"
+                            },
+                        }
+                        for (name in fiat_assets) {
+                            let a = fiat_assets[name]
+                            document.write(`<div class="asset">
+                                <div class="asset-left">
+                                    ${a.name} <span class="symbol">(${a.symbol})</span><br />
+                                    <span class="price"><span class="pricedIn">${a.pricedIn}</span>${a.price}</span>
+                                </div>
+                                <div class="asset-right">
+                                    <button class="buy-button">Buy</button>
+                                </div>
+                            </div>`)
+                        }
+                    </script>
+                </div>
+            </div>
+
+        </div>
+        
+{{ template "footer.html" }}
